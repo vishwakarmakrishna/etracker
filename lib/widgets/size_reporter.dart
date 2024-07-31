@@ -22,39 +22,41 @@ class _SizeReporterState extends State<SizeReporter> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SwitchListTile(
-            value: isShowWindowSize,
-            onChanged: changeWindowSizeView,
-            title: Text(
-              'Window size: ${isShowWindowSize && _size != null ? '${_size?.width.toStringAsFixed(2)} x ${_size?.height.toStringAsFixed(2)}' : 'Toogle to get Size'}',
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SwitchListTile(
+              value: isShowWindowSize,
+              onChanged: changeWindowSizeView,
+              title: Text(
+                'Window size: ${isShowWindowSize && _size != null ? '${_size?.width.toStringAsFixed(2)} x ${_size?.height.toStringAsFixed(2)}' : 'Toogle to get Size'}',
+              ),
             ),
-          ),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (isShowWindowSize) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final RenderBox? renderBox =
-                        context.findRenderObject() as RenderBox?;
-                    if (renderBox != null) {
-                      final size = renderBox.size;
-                      if (size != _size) {
-                        setState(() {
-                          _size = size;
-                        });
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (isShowWindowSize) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final RenderBox? renderBox =
+                          context.findRenderObject() as RenderBox?;
+                      if (renderBox != null) {
+                        final size = renderBox.size;
+                        if (size != _size) {
+                          setState(() {
+                            _size = size;
+                          });
+                        }
                       }
-                    }
-                  });
-                }
+                    });
+                  }
 
-                return widget.child;
-              },
+                  return widget.child;
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
